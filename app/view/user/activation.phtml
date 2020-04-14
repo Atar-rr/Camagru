@@ -1,0 +1,26 @@
+<?php if($result === true): ?>
+<div>
+	<p>Ваш аккаунт активирован</p>
+</div>
+    <div>
+        <a href="/user/login">Войти на сайт</a>
+    </div>
+<?php endif;?>
+<?php ?>
+
+<?php if($result === false): ?>
+	<div>
+		<p>Ваш аккаунт не активирован</p>
+	</div>
+<?php endif;?>
+<?php ?>
+
+<?php if(!isset($result)): ?>
+	<div>
+		<p>У вас нет доступ к данной странице</p>
+	</div>
+<?php endif;?>
+<?php ?>
+
+
+

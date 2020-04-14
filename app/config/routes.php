@@ -27,7 +27,7 @@ return [
 		'action' => 'restore'
 	],
 
-	'user/activation/[\w]+' => [
+	'user/activation' => [
 		'controller' => 'user',
 		'action' => 'activation'
 	]
