@@ -4,7 +4,7 @@ namespace App\library;
 
 use App\core\Db;
 
-require_once ROOT . '/app/core/Db.php';
+require_once ROOT . '/App/core/Db.php';
 
 class Validator
 {

@@ -6,7 +6,7 @@ class Db
 {
 	public static function getConnection ()
 	{
-		$paramsPath = ROOT . '/app/config/db.php';
+		$paramsPath = ROOT . '/App/config/db.php';
 		$params = include $paramsPath;
 
 		try { // обдумать

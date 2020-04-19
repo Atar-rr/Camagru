@@ -1,6 +1,6 @@
 <?php
 
-include_once 'app/dev/dev.php'; //удалить дебаг
+include_once 'App/dev/dev.php'; //удалить дебаг
 
 use App\core\Router;
 
@@ -10,7 +10,7 @@ error_reporting(E_ALL);
 define('ROOT', dirname(__FILE__));
 
 spl_autoload_register(function ($class) {
-	$path = lcfirst(str_replace('\\', '/', $class) . '.php');
+	$path = str_replace('\\', '/', $class) . '.php';
 	if (file_exists($path))
 		require $path;
 });

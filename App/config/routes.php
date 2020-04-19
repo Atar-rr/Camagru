@@ -4,7 +4,7 @@ return [
 
 	'' => [
 		'controller' => 'main',
-		'action' => 'index'
+		'action' => 'gallery'
 	],
 
 	'user/login' => [
@@ -30,5 +30,14 @@ return [
 	'user/activation' => [
 		'controller' => 'user',
 		'action' => 'activation'
+	],
+
+	'user/cabinet' => [
+		'controller' => 'user',
+		'action' => 'cabinet'
+	],
+	'user/logout' => [
+		'controller' => 'user',
+		'action' => 'logout'
 	]
 ];

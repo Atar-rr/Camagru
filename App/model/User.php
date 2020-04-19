@@ -2,16 +2,44 @@
 
 namespace App\model;
 
-require_once ROOT . '/app/library/Validator.php';
-require_once ROOT . '/app/core/Db.php';
-
 use App\library\Validator;
 use App\core\Db;
 
+require_once ROOT . '/App/library/Validator.php';
+require_once ROOT . '/App/core/Db.php';
+
+
 class User
 {
-	public static function login()
+	public static function login() // как разделить код?
 	{
+		$user = $_POST['user'];
+		$error = [];
+
+		$db = Db::getConnection();
+
+		$sql = "SELECT password, status_register, id  FROM users WHERE login=:login";
+		$sth = $db->prepare($sql);
+		$sth->bindParam(':login', $user['login']); // что если login не установлен
+		$sth->execute();
+
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		if ($result) { // вынести валидацию?
+			if ($result['password'] === hash('whirlpool', $user['password'])) {
+				if ($result['status_register']) {
+					$_SESSION['id'] = $result['id'];
+				} else {
+					$error['status_register'] =  "Аккаунт не активирован.";
+				}
+			} else {
+				$error['password'] = "Неверный пароль";
+			}
+		} else {
+			$error['login'] = "Пользователя с таким именем не существует";
+		}
+
+		$param = ['user' => $user, 'error' => $error];
+		return $param;
 	}
 
 	public static function register()
@@ -37,36 +65,42 @@ class User
 
 				$sth->execute();
 				self::sendMail($user);
-				return $param;
 			}
 		}
 		return $param;
 	}
 
+	public static function changePassword()
+	{
+
+	}
+
+	public static function forgetPassword()
+	{
+
+	}
+
 	public static function activation($token)
 	{
 		$db = Db::getConnection();
-		if ($db)
-		{
-			$sql = "SELECT id FROM users WHERE token=:token";
+
+		$sql = "SELECT id FROM users WHERE token=:token";
+		$sth = $db->prepare($sql);
+		$sth->bindParam(':token', $token);
+		$sth->execute();
+
+		$result = $sth->fetch();
+		if ($result) {
+			$activate = true;
+
+			$sql = "UPDATE users SET status_register=:activate WHERE token=:token";
 			$sth = $db->prepare($sql);
+
 			$sth->bindParam(':token', $token);
-			$sth->execute();
+			$sth->bindParam(':activate', $activate);
 
-			$result = $sth->fetch();
-			if ($result)
-			{
-				$activate = true;
-
-				$sql = "UPDATE users SET status_register=:activate WHERE token=:token";
-				$sth = $db->prepare($sql);
-
-				$sth->bindParam(':token', $token);
-				$sth->bindParam(':activate', $activate);
-
-				if($sth->execute()) {
-					return true;
-				}
+			if($sth->execute()) {
+				return true;
 			}
 		}
 		return false;
@@ -85,6 +119,6 @@ class User
 		$headers .= "Content-Transfer-Encoding: utf-8\r\n";
 		$headers .= "Reply-To: no-reply@gmail.com\r\n";
 
-		debug(mail($to, $subject, $message, $headers));
+		mail($to, $subject, $message, $headers);
 	}
 }

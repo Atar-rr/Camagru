@@ -1,0 +1,13 @@
+<?php  if(!isset($_SESSION['id'])):?>
+<div>
+	<a href="/user/login">Войти</a>
+</div>
+<div>
+	<a href="/user/register">Регистрация</a>
+</div>
+<?php endif; ?>
+<?php  if(isset($_SESSION['id'])):?>
+    <div>
+        <a href="/user/logout">Выйти</a>
+    </div>
+<?php endif; ?>

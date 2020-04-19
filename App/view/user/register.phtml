@@ -1,3 +1,4 @@
+<?php if($flag === 0): ?>
 <form action="#" method="post">
 	<div>
 		<label>
@@ -33,3 +34,12 @@
 	</div>
 	<button name="submit" type="submit">Ok</button>
 </form>
+<?php endif;?>
+<?php if($flag === 1): ?>
+<div>
+	<p>Спасибо за регистрацию. Вам необходимо подтвердить ваш email. Для этого нужно перейти по ссылке которую мы отправили на ваш email</p>
+</div>
+<?php endif;?>
+<div>
+	<a href="/">На главную</a>
+</div>

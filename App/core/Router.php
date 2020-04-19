@@ -2,8 +2,6 @@
 
 namespace App\core;
 
-use App\controllers\UserController;
-
 class Router
 {
 	private $routes;
@@ -11,7 +9,7 @@ class Router
 
 	public function __construct()
 	{
-		$this->routes = require 'app/config/routes.php';
+		$this->routes = require 'App/config/routes.php';
 	}
 
 	protected function getUri()
@@ -47,13 +45,12 @@ class Router
 	public function run()
 	{
 		if ($this->match()) {
-			$pathController = ROOT . '/app/controllers/'
-				. ucfirst($this->params['controller'])
-				. 'Controller.php';
-			if (file_exists($pathController)) { // 404 ?
-				include_once $pathController;
+			$path =  'App\controllers\\' . ucfirst($this->params['controller']) . 'Controller';
+
+			if (class_exists($path)) {
+				$controller = new $path;
 				$action = $this->params['action'] . 'Action';
-				$controller = new UserController();
+
 				if(method_exists($controller, $action)) {// 404 ?
 					$query = $this->getQuery($this->getUri());
 					if (isset($query)) {
@@ -62,8 +59,10 @@ class Router
 						$controller->$action();
 					}
 				}
-				else
+				else {
 					debug('Error 404');
+					//debug(1);
+				}
 			}
 		}
 		else
