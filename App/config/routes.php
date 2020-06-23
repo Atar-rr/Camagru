@@ -2,42 +2,48 @@
 
 return [
 
-	'' => [
-		'controller' => 'main',
-		'action' => 'gallery'
-	],
+    '' => [
+        'controller' => 'main',
+        'action' => 'gallery'
+    ],
 
-	'user/login' => [
-		'controller' => 'user',
-		'action' => 'login'
-	],
+    'user/login' => [
+        'controller' => 'user',
+        'action' => 'login'
+    ],
 
-	'user/register' => [
-		'controller' => 'user',
-		'action' => 'register'
-	],
+    'user/register' => [
+        'controller' => 'user',
+        'action' => 'register'
+    ],
 
-	'photo/new' => [
-		'controller' => 'photo',
-		'action' => 'new'
-	],
+    'photo/new' => [
+        'controller' => 'photo',
+        'action' => 'new'
+    ],
 
-	'user/restore' => [
-		'controller' => 'user',
-		'action' => 'restore'
-	],
+    'photo/save' => [
+        'controller' => 'photo',
+        'action' => 'save'
+    ],
 
-	'user/activation' => [
-		'controller' => 'user',
-		'action' => 'activation'
-	],
 
-	'user/cabinet' => [
-		'controller' => 'user',
-		'action' => 'cabinet'
-	],
-	'user/logout' => [
-		'controller' => 'user',
-		'action' => 'logout'
-	]
+    'user/restore' => [
+        'controller' => 'user',
+        'action' => 'restore'
+    ],
+
+    'user/activation' => [
+        'controller' => 'user',
+        'action' => 'activation'
+    ],
+
+    'user/cabinet' => [
+        'controller' => 'user',
+        'action' => 'cabinet'
+    ],
+    'user/logout' => [
+        'controller' => 'user',
+        'action' => 'logout'
+    ]
 ];
