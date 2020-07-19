@@ -2,24 +2,22 @@
 
 namespace App\model;
 
+use App\core\Model;
 use App\library\Validator;
-use App\core\Db;
 
 //require_once ROOT . '/App/library/Validator.php';
 //require_once ROOT . '/App/core/Db.php';
 
-
-class User
+class User extends Model
 {
-    public static function login() // как разделить код?
+    #TODO убрать валидацию в отдельный класс LoginValidate
+    public function login()
     {
         $user = $_POST['user'];
         $error = [];
 
-        $db = Db::getConnection();
-
         $sql = "SELECT password, status_register, id  FROM users WHERE login=:login";
-        $sth = $db->prepare($sql);
+        $sth = $this->db->prepare($sql);
         $sth->bindParam(':login', $user['login']); // что если login не установлен
         $sth->execute();
 
@@ -42,7 +40,7 @@ class User
         return $param;
     }
 
-    public static function register()
+    public function register()
     {
         $user = $_POST['user'];
         $validator = new Validator($user);
@@ -50,13 +48,11 @@ class User
 
         $param = ['user' => $user, 'error' => $error];
         if (!count($error)) {
-            $db = Db::getConnection();
-            if ($db) {
                 $user['password'] = hash('whirlpool', $user['password']);
                 $user['token'] = md5($user['email']);
 
                 $sql = "INSERT INTO users (login, password, email, token) VALUES (:login, :password, :email, :token)";
-                $sth = $db->prepare($sql);
+                $sth = $this->db->prepare($sql);
 
                 $sth->bindParam(':login', $user['login']);
                 $sth->bindParam(':password', $user['password']);
@@ -65,7 +61,6 @@ class User
 
                 $sth->execute();
                 self::sendMail($user);
-            }
         }
         return $param;
     }
@@ -80,12 +75,11 @@ class User
 
     }
 
-    public static function activation($token)
+    public function activation($token)
     {
-        $db = Db::getConnection();
 
         $sql = "SELECT id FROM users WHERE token=:token";
-        $sth = $db->prepare($sql);
+        $sth = $this->db->prepare($sql);
         $sth->bindParam(':token', $token);
         $sth->execute();
 
@@ -94,7 +88,7 @@ class User
             $activate = true;
 
             $sql = "UPDATE users SET status_register=:activate WHERE token=:token";
-            $sth = $db->prepare($sql);
+            $sth = $this->db->prepare($sql);
 
             $sth->bindParam(':token', $token);
             $sth->bindParam(':activate', $activate);
@@ -106,7 +100,8 @@ class User
         return false;
     }
 
-    private static function sendMail($user)
+    #TODO перенести в отдельный класс в библиотеку
+    private function sendMail($user)
     {
         $token = $user['token'];
 

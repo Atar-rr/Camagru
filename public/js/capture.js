@@ -1,4 +1,6 @@
-document.addEventListener('DOMContentLoaded', function () {
+var createphoto = document.getElementById('createphoto');
+
+createphoto.addEventListener('click', function () {
 
     var video = document.getElementById('video');
     var makebutton = document.getElementById('makebutton');

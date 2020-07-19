@@ -4,14 +4,22 @@
 	<title>WebRTC: Still photo capture demo</title>
 	<meta charset='utf-8'>
 <!--    <link rel="stylesheet" href="main.css" type="text/css" media="all">-->
-	<script src="../../../public/js/capture.js">
-	</script>
+
 </head>
 <body>
 <div>
+    <form action="/photo/save" enctype="multipart/form-data" method="POST">
+        <input type="file" name="loadphoto">
+        <button type="submit" name="save" >Загрузить</button>
+    </form>
+</div>
+<div>
+    <button id="createphoto">Включить камеру</button>
+</div>
+<div>
 	<div class="camera">
 		<video id="video">Video stream not available.</video>
-		<button id="makebutton">Take photo</button>
+		<button id="makebutton">Make photo</button>
 	</div>
 	<canvas id="canvas">
 	</canvas>
@@ -19,5 +27,7 @@
         <img id="photo">
     </div>
 </div>
+<script src="../../../public/js/capture.js">
+</script>
 </body>
 </html>
