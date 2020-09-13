@@ -3,31 +3,35 @@
 namespace App\model;
 
 use App\core\Model;
-use App\library\Validator;
+use App\library\Mail;
+use App\library\RegValidator;
+use App\library\SendMail;
 
-//require_once ROOT . '/App/library/Validator.php';
-//require_once ROOT . '/App/core/Db.php';
-
+/**
+ * Class User
+ *
+ * @package App\model
+ */
 class User extends Model
 {
+    const TABLE = 'user';
+
     #TODO убрать валидацию в отдельный класс LoginValidate
     public function login()
     {
+        #TODO что если логин не установлен
         $user = $_POST['user'];
         $error = [];
 
-        $sql = "SELECT password, status_register, id  FROM users WHERE login=:login";
-        $sth = $this->db->prepare($sql);
-        $sth->bindParam(':login', $user['login']); // что если login не установлен
-        $sth->execute();
-
+        $sth = $this->execute("SELECT password, active_status, id  FROM users WHERE login=:login", ['login' => $user['login']]);
         $result = $sth->fetch(\PDO::FETCH_ASSOC);
+
         if ($result) { // вынести валидацию?
             if ($result['password'] === hash('whirlpool', $user['password'])) {
-                if ($result['status_register']) {
+                if ($result['active_status']) {
                     $_SESSION['id'] = $result['id'];
                 } else {
-                    $error['status_register'] = "Аккаунт не активирован.";
+                    $error['active_status'] = "Аккаунт не активирован.";
                 }
             } else {
                 $error['password'] = "Неверный пароль";
@@ -36,41 +40,38 @@ class User extends Model
             $error['login'] = "Пользователя с таким именем не существует";
         }
 
-        $param = ['user' => $user, 'error' => $error];
-        return $param;
+        return ['user' => $user, 'error' => $error];
     }
 
     public function register()
     {
         $user = $_POST['user'];
-        $validator = new Validator($user);
+        $validator = new RegValidator($user);
         $error = $validator->validate();
 
-        $param = ['user' => $user, 'error' => $error];
+        $params = ['user' => $user, 'error' => $error];
         if (!count($error)) {
-                $user['password'] = hash('whirlpool', $user['password']);
-                $user['token'] = md5($user['email']);
+            $user['password'] = hash('whirlpool', $user['password']);
+            $user['token'] = md5($user['email']);
 
-                $sql = "INSERT INTO users (login, password, email, token) VALUES (:login, :password, :email, :token)";
-                $sth = $this->db->prepare($sql);
+            $this->execute
+            (
+                "INSERT INTO users (login, password, email, token) VALUES (:login, :password, :email, :token)",
+                ['login' => $user['login'], 'password' => $user['password'], 'email' => $user['email'], 'token' => $user['token']]
+            );
 
-                $sth->bindParam(':login', $user['login']);
-                $sth->bindParam(':password', $user['password']);
-                $sth->bindParam(':email', $user['email']);
-                $sth->bindParam(':token', $user['token']);
-
-                $sth->execute();
-                self::sendMail($user);
+            self::sendMail($user);
         }
-        return $param;
+
+        return $params;
     }
 
-    public static function changePassword()
+    public function changePassword()
     {
 
     }
 
-    public static function forgetPassword()
+    public function restorePassword()
     {
 
     }
@@ -78,42 +79,38 @@ class User extends Model
     public function activation($token)
     {
 
-        $sql = "SELECT id FROM users WHERE token=:token";
-        $sth = $this->db->prepare($sql);
-        $sth->bindParam(':token', $token);
-        $sth->execute();
+        $sth = $this->execute
+        (
+            "SELECT id FROM users WHERE token=:token",
+            ['token' => $token]
+        );
 
         $result = $sth->fetch();
         if ($result) {
-            $activate = true;
-
-            $sql = "UPDATE users SET status_register=:activate WHERE token=:token";
-            $sth = $this->db->prepare($sql);
-
-            $sth->bindParam(':token', $token);
-            $sth->bindParam(':activate', $activate);
+            $activeStatus = true;
+            $sth = $this->execute
+            (
+                "UPDATE users SET active_status=:active_status WHERE token=:token",
+                ['token' => $token, 'active_status' => $activeStatus]
+            );
 
             if ($sth->execute()) {
                 return true;
             }
         }
+
         return false;
     }
 
     #TODO перенести в отдельный класс в библиотеку
-    private function sendMail($user)
+    private function sendActivateMail($user)
     {
         $token = $user['token'];
-
-        $to = $user['email'];
         $subject = 'Подтверждение регистрации на сайте Camagru';
         $message = "Спасибо за регистрацию на сайте Camagru. Для подтверждения вашего аккаунта перейдите по ссылке <a href='http://localhost:8081/user/activation?token=$token'>Подтвердить</a>";
 
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/html; charset=utf-8\r\n";
-        $headers .= "Content-Transfer-Encoding: utf-8\r\n";
-        $headers .= "Reply-To: no-reply@gmail.com\r\n";
+        Mail::sendMail($user['email'], $subject, $message);
 
-        mail($to, $subject, $message, $headers);
     }
+
 }

@@ -4,5 +4,5 @@ return [
     'dbname' => 'camagru',
     'host' => 'localhost',
     'user' => 'root',
-    'password' => ' ',
+    'password' => 'Sergo',
 ];

@@ -8,7 +8,7 @@ createphoto.addEventListener('click', function () {
     var photo = document.getElementById('photo');
 
     navigator.mediaDevices.getUserMedia({ video: { width: 900, height: 600 }, audio: false})
-        .then(function (stream) {
+        .then(function (stream ) {
             video.srcObject = stream;
             video.play();
         }).catch(function (err) {

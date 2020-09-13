@@ -1,21 +1,21 @@
 <form action='#' method="post">
     <div>
-		<?php if(isset($result['error']['status_register'])):?>
-			<?= $result['error']['status_register']?>
+		<?php if(isset($params['error']['status_register'])):?>
+			<?= $params['error']['status_register']?>
 		<?php endif;?>
         <label>
-            <input type="text" placeholder="Login" required name="user[login]" value="<?= htmlspecialchars($result['user']['login'] ?? '')?>">
+            <input type="text" placeholder="Login" required name="user[login]" value="<?= htmlspecialchars($params['user']['login'] ?? '')?>">
         </label>
-		<?php if(isset($result['error']['login'])):?>
-            <?= $result['error']['login']?>
+		<?php if(isset($params['error']['login'])):?>
+            <?= $params['error']['login']?>
 		<?php endif;?>
     </div>
     <div>
         <label>
             <input type="password" required placeholder="Password" name="user[password]">
         </label>
-        <?php if(isset($result['error']['password'])):?>
-			<?= $result['error']['password'] ?>
+        <?php if(isset($params['error']['password'])):?>
+			<?= $params['error']['password'] ?>
         <?php endif;?>
     </div>
 	<div>

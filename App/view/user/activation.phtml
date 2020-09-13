@@ -1,4 +1,4 @@
-<?php if($result === true): ?>
+<?php if($params === true): ?>
 <div>
 	<p>Ваш аккаунт активирован</p>
 </div>
@@ -8,14 +8,14 @@
 <?php endif;?>
 <?php ?>
 
-<?php if($result === false): ?>
+<?php if($params === false): ?>
 	<div>
 		<p>Ваш аккаунт не активирован</p>
 	</div>
 <?php endif;?>
 <?php ?>
 
-<?php if(!isset($result)): ?>
+<?php if(!isset($params)): ?>
 	<div>
 		<p>У вас нет доступ к данной странице</p>
 	</div>

@@ -1,41 +1,41 @@
-<?php if($flag === 0): ?>
+<?php if($params['flag'] === 0): ?>
 <form action="#" method="post">
 	<div>
 		<label>
-			<input name="user[login]" type="text" required maxlength="20" placeholder="Login" value="<?= htmlspecialchars($result['user']['login'] ?? '')?>">
+			<input name="user[login]" type="text" required maxlength="20" placeholder="Login" value="<?= htmlspecialchars($params['user']['login'] ?? '')?>">
 		</label>
-        <?php if(isset($result['error']['login'])): ?>
-		<?= htmlspecialchars($result['error']['login']) ?>
+        <?php if(isset($params['error']['login'])): ?>
+		<?= htmlspecialchars($params['error']['login']) ?>
 		<?php endif;?>
 	</div>
 	<div>
 		<label>
-			<input name="user[email]" type="email" required maxlength="255" placeholder="Email" value="<?= htmlspecialchars($result['user']['email'] ?? '')?>">
+			<input name="user[email]" type="email" required maxlength="255" placeholder="Email" value="<?= htmlspecialchars($params['user']['email'] ?? '')?>">
 		</label>
-		<?php if(isset($result['error']['email'])): ?>
-			<?= htmlspecialchars($result['error']['email']) ?>
+		<?php if(isset($params['error']['email'])): ?>
+			<?= htmlspecialchars($params['error']['email']) ?>
 		<?php endif;?>
 	</div>
 	<div>
 		<label>
 			<input name="user[password]" type="password" maxlength="255" required placeholder="Password">
 		</label>
-		<?php if(isset($result['error']['password'])): ?>
-			<?= htmlspecialchars($result['error']['password']) ?>
+		<?php if(isset($params['error']['password'])): ?>
+			<?= htmlspecialchars($params['error']['password']) ?>
 		<?php endif;?>
 	</div>
 	<div>
 		<label>
 			<input name="user[confirm]" type="password" required placeholder="Confirm password">
 		</label>
-		<?php if(isset($result['error']['confirm'])): ?>
-			<?= htmlspecialchars($result['error']['confirm']) ?>
+		<?php if(isset($params['error']['confirm'])): ?>
+			<?= htmlspecialchars($params['error']['confirm']) ?>
 		<?php endif;?>
 	</div>
 	<button name="submit" type="submit">Ok</button>
 </form>
 <?php endif;?>
-<?php if($flag === 1): ?>
+<?php if($params['flag'] === 1): ?>
 <div>
 	<p>Спасибо за регистрацию. Вам необходимо подтвердить ваш email. Для этого нужно перейти по ссылке которую мы отправили на ваш email</p>
 </div>

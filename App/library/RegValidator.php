@@ -3,16 +3,18 @@
 namespace App\library;
 
 use App\core\Db;
+use App\core\Model;
 
 //require_once ROOT . '/App/core/Db.php';
 
-class Validator
+class RegValidator extends Model
 {
     private $user = [];
     private $errors = [];
 
-    public function __construct($data)
+    public function __construct(array $data)
     {
+        parent::__construct();
         $this->user['login'] = $data['login'] ?? '';
         $this->user['email'] = $data['email'] ?? '';
         $this->user['password'] = $data['password'] ?? '';
@@ -37,14 +39,9 @@ class Validator
             $this->errors['login'] = "Вы ввели недопустимые символы. Логин может содержать буквы,
              цифры и символы нижнего подчеркивания";
         } else {
-            if ($db = Db::getConnection()) {
-                $sql = "SELECT login FROM users WHERE login=:login";
-                $sth = $db->prepare($sql);
-                $sth->bindParam(':login', $this->user['login']);
-                $sth->execute();
-                if ($sth->fetch(\PDO::FETCH_ASSOC)) {
-                    $this->errors['login'] = "Пользователь с таким именем уже существует";
-                }
+            $sth = $this->execute("SELECT login FROM users WHERE login=:login", ['login' => $this->user['login']]);
+            if ($sth->fetch(\PDO::FETCH_ASSOC)) {
+                $this->errors['login'] = "Пользователь с таким именем уже существует";
             }
         }
     }
@@ -72,11 +69,7 @@ class Validator
         } elseif (!filter_var($this->user['email'], FILTER_VALIDATE_EMAIL)) {
             $this->errors['email'] = "Некорректный e-mail адрес";
         } else {
-            $sql = "SELECT email FROM users WHERE email = :email";
-            $db = Db::getConnection();
-            $sth = $db->prepare($sql);
-            $sth->bindParam(':email', $this->user['email']);
-            $sth->execute();
+            $sth = $this->execute("SELECT email FROM users WHERE email = :email", ['email' => $this->user['email']]);
             if ($sth->fetch(\PDO::FETCH_ASSOC)) {
                 $this->errors['email'] = "Пользователь с таким e-mail уже существует";
             }

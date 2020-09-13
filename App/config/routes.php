@@ -3,8 +3,8 @@
 return [
 
     '' => [
-        'controller' => 'main',
-        'action' => 'gallery'
+        'controller' => 'gallery',
+        'action' => 'show'
     ],
 
     'user/login' => [
@@ -22,11 +22,10 @@ return [
         'action' => 'new'
     ],
 
-    'photo/save' => [
+    'photo/upload' => [
         'controller' => 'photo',
-        'action' => 'save'
+        'action' => 'upload'
     ],
-
 
     'user/restore' => [
         'controller' => 'user',
@@ -38,10 +37,11 @@ return [
         'action' => 'activation'
     ],
 
-    'user/cabinet' => [
+    'user/setting' => [
         'controller' => 'user',
-        'action' => 'cabinet'
+        'action' => 'setting'
     ],
+
     'user/logout' => [
         'controller' => 'user',
         'action' => 'logout'

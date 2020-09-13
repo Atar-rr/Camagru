@@ -2,22 +2,25 @@
 
 namespace App\controllers;
 
+use App\core\Controller;
+use App\model\Photo;
 
-class PhotoController
+class PhotoController extends Controller
 {
-    public function newAction()
+    public function __construct($view, array $routes = [], ?string $query = '')
     {
-        $pathView = ROOT . '/App/view/photo/new.phtml';
-        require $pathView;
+        parent::__construct($view, $routes, $query);
+        $this->model = new Photo();
     }
 
-    #TODO добавить валидацию загружаемых файлов
-    public function saveAction()
+    public function newAction()
     {
-        //debug($_POST);
-        debug($_FILES);
-        echo 'ok';
-        //$pathView = ROOT . '/App/view/photo/new.phtml';
-        //require $pathView;
+        $this->view->renderer('photo/new.phtml');
+    }
+
+    public function uploadAction()
+    {
+        #TODO проверка, что пользователь авторизован
+        $this->model->uploadPhoto();
     }
 }
